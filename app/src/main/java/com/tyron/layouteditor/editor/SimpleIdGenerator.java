@@ -1,8 +1,9 @@
-package com.tyron.layouteditor;
+package com.tyron.layouteditor.editor;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,11 +74,30 @@ public class SimpleIdGenerator implements IdGenerator {
         }
         return existingId;
     }
-
+    
+    @Override
+    public int replace(String oldId, String newId){
+        Integer existingId = idMap.get(oldId);
+        
+        if(existingId != null){
+            idMap.remove(oldId);
+            keyMap.remove(existingId);
+        }
+        idMap.put(newId, existingId);
+        keyMap.put(existingId, newId);
+        
+        return existingId;
+        
+     }
+	
+	@Override
     public synchronized boolean keyExists(String key) {
         return idMap.containsKey(key);
     }
+	
+	
 
+    @Override
     public synchronized String getString(Integer id) {
         try {
             return keyMap.get(id);
