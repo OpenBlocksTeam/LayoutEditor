@@ -5,8 +5,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.tyron.layouteditor.editor.IdGenerator;
-import com.tyron.layouteditor.editor.SimpleIdGenerator;
 import com.tyron.layouteditor.editor.widget.Attributes;
 import com.tyron.layouteditor.models.Attribute;
 import com.tyron.layouteditor.values.Primitive;
@@ -33,10 +31,6 @@ public class ViewManager {
                 case Attributes.View.Height:
                     params.height = (int) attr.value.getAsDimension().apply(view.getContext());
                     break;
-                case Attributes.View.Padding:
-                    int padding = (int)attr.value.getAsDimension().apply(view.getContext());
-                    view.setPadding(padding, padding, padding, padding);
-
             }
 
             if (params instanceof LinearLayout.LayoutParams) {

@@ -13,8 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tyron.layouteditor.editor.EditorContext;
-
 import java.util.concurrent.ArrayBlockingQueue;
 
 import xyz.truenight.dynamic.DynamicLayoutInflater;
@@ -56,7 +54,7 @@ public final class AsyncDynamicLayoutInflater {
     Handler mHandler;
     InflateThread mInflateThread;
 
-    public AsyncDynamicLayoutInflater(@NonNull EditorContext context) {
+    public AsyncDynamicLayoutInflater(@NonNull Context context) {
         mInflater = new BasicInflater(context);
         mHandler = new Handler(mHandlerCallback);
         mInflateThread = InflateThread.getInstance();
@@ -113,12 +111,12 @@ public final class AsyncDynamicLayoutInflater {
                 "android.app."
         };
 
-        BasicInflater(EditorContext context) {
+        BasicInflater(Context context) {
             super(context);
         }
 
         @Override
-        public DynamicLayoutInflater cloneInContext(EditorContext newContext) {
+        public DynamicLayoutInflater cloneInContext(Context newContext) {
             return new BasicInflater(newContext);
         }
 

@@ -32,8 +32,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
 
-import com.tyron.layouteditor.editor.EditorContext;
-import com.tyron.layouteditor.editor.WidgetFactory;
+import com.tyron.layouteditor.WidgetFactory;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -85,7 +84,7 @@ public abstract class DynamicLayoutInflater {
 
     final Object[] mConstructorArgs = new Object[2];
 
-    private final EditorContext mContext;
+    private final Context mContext;
 
 
     // these are optional, set by the caller
@@ -106,19 +105,19 @@ public abstract class DynamicLayoutInflater {
      * Initializing of base {@link DynamicLayoutInflater}
      * <p>
      * Can be used for setting params which will be copied
-     * to instances given by {@link DynamicLayoutInflater#from(EditorContext)}
+     * to instances given by {@link DynamicLayoutInflater#from(Context)}
      *
      * @param context Application context
      * @return Base inflater
      */
-    public static Builder base(EditorContext context) {
+    public static Builder base(Context context) {
         return new Builder(context);
     }
 
     /**
      * Obtains the {@link DynamicLayoutInflater} from the given context.
      */
-    public static DynamicLayoutInflater from(EditorContext context) {
+    public static DynamicLayoutInflater from(Context context) {
         DynamicLayoutInflater unwrap = Utils.unwrap(mBase);
         if (unwrap == null) {
             return new PhoneDynamicLayoutInflater(context);
@@ -127,14 +126,14 @@ public abstract class DynamicLayoutInflater {
         }
     }
 
-    protected DynamicLayoutInflater(EditorContext context) {
+    protected DynamicLayoutInflater(Context context) {
         mContext = context;
-        mAttributeApplier = new AttributeApplier(context);
+        mAttributeApplier = AttributeApplier.DEFAULT;
     }
 
     protected WidgetFactory widgetFactory;
 
-    protected DynamicLayoutInflater(DynamicLayoutInflater original, EditorContext newContext) {
+    protected DynamicLayoutInflater(DynamicLayoutInflater original, Context newContext) {
         mContext = newContext;
         widgetFactory = original.widgetFactory;
         mFactory = original.mFactory;
@@ -276,7 +275,7 @@ public abstract class DynamicLayoutInflater {
      * @return Returns a brand spanking new DynamicLayoutInflater object associated with
      * the given Context.
      */
-    public abstract DynamicLayoutInflater cloneInContext(EditorContext newContext);
+    public abstract DynamicLayoutInflater cloneInContext(Context newContext);
 
     /**
      * Inflate a new view hierarchy from the specified xml resource. Throws
@@ -639,7 +638,7 @@ public abstract class DynamicLayoutInflater {
      */
     protected View onCreateView(String name, AttributeSet attrs)
             throws ClassNotFoundException {
-    return createView(name, "android.view.", attrs);
+        return createView(name, "android.view.", attrs);
     }
 
     /**
@@ -1035,7 +1034,7 @@ public abstract class DynamicLayoutInflater {
     }
 
     public static class Builder {
-        private EditorContext mContext;
+        private Context mContext;
         private WidgetFactory factory;
         private Factory mFactory;
         private Factory2 mFactory2;
@@ -1046,7 +1045,7 @@ public abstract class DynamicLayoutInflater {
         private Map<Class, ClassMappedParamAdapter> mParamClsMap;
 
 
-        protected Builder(EditorContext context) {
+        protected Builder(Context context) {
             mContext = context;
         }
 
@@ -1124,7 +1123,7 @@ public abstract class DynamicLayoutInflater {
         }
 
         protected AttributeApplier newAttributeApplier() {
-            return new AttributeApplier(mContext);
+            return new AttributeApplier();
         }
 
         public Builder setFilter(Filter filter) {
@@ -1132,7 +1131,7 @@ public abstract class DynamicLayoutInflater {
             return this;
         }
 
-        protected DynamicLayoutInflater instance(EditorContext context) {
+        protected DynamicLayoutInflater instance(Context context) {
             return new PhoneDynamicLayoutInflater(context);
         }
 

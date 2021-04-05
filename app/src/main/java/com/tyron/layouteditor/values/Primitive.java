@@ -66,10 +66,6 @@ public class Primitive extends Value {
         if (target instanceof String) {
             return true;
         }
-        
-        if(target == null){
-            return false;
-        }     
 
         Class<?> classOfPrimitive = target.getClass();
         for (Class<?> standardPrimitive : PRIMITIVE_TYPES) {

@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.tyron.layouteditor.editor.EditorContext;
+import com.tyron.layouteditor.WidgetFactory;
 
 import java.util.List;
 
@@ -32,7 +32,6 @@ import xyz.truenight.dynamic.adapter.attr.TypedAttrAdapters;
 import xyz.truenight.dynamic.adapter.param.TypedParamAdapter;
 import xyz.truenight.dynamic.adapter.param.TypedParamAdapters;
 import xyz.truenight.dynamic.compat.adapter.attr.CompatImageViewAttrAdapter;
-import xyz.truenight.dynamic.compat.adapter.attr.CompatTextViewAttrAdapter;
 import xyz.truenight.utils.Utils;
 
 public class CompatDynamicLayoutInflater extends DynamicLayoutInflater {
@@ -50,8 +49,7 @@ public class CompatDynamicLayoutInflater extends DynamicLayoutInflater {
             COMPAT_IMAGE_VIEW_ADAPTER,
             TypedAttrAdapters.IMAGE_VIEW_ADAPTER,
             TypedAttrAdapters.LINEAR_LAYOUT_ADAPTER,
-            TypedAttrAdapters.RELATIVE_LAYOUT_ADAPTER,
-            new CompatTextViewAttrAdapter()
+            TypedAttrAdapters.RELATIVE_LAYOUT_ADAPTER
     );
 
     private static List<TypedParamAdapter> PARAM_DEFAULT = Utils.add(
@@ -70,16 +68,16 @@ public class CompatDynamicLayoutInflater extends DynamicLayoutInflater {
      * Initializing of base {@link CompatDynamicLayoutInflater}
      * <p>
      * Can be used for setting params which will be copied
-     * to instances given by {@link CompatDynamicLayoutInflater#from(EditorContext)}
+     * to instances given by {@link CompatDynamicLayoutInflater#from(Context)}
      *
      * @param context Application context
      * @return Base inflater
      */
-    public static Builder base(EditorContext context) {
+    public static Builder base(Context context) {
         return new Builder(context);
     }
 
-    public static DynamicLayoutInflater from(EditorContext context) {
+    public static DynamicLayoutInflater from(Context context) {
         DynamicLayoutInflater unwrap = Utils.unwrap(DynamicLayoutInflater.mBase);
         if (unwrap == null) {
             // clone for factory unlock
@@ -91,18 +89,18 @@ public class CompatDynamicLayoutInflater extends DynamicLayoutInflater {
 
     /**
      * Instead of instantiating directly, you should retrieve an instance
-     * through {@link CompatDynamicLayoutInflater#from(EditorContext)}
+     * through {@link CompatDynamicLayoutInflater#from(Context)}
      *
      * @param context The Context in which to find resources and other
      *                application-specific things.
      */
-    protected CompatDynamicLayoutInflater(EditorContext context) {
+    protected CompatDynamicLayoutInflater(Context context) {
         super(context);
         setAttributeApplier(getDefaultApplier());
-        //setFactory2(new CompatViewInflater());
+        setFactory2(new CompatViewInflater());
     }
 
-    protected CompatDynamicLayoutInflater(DynamicLayoutInflater original, EditorContext newContext) {
+    protected CompatDynamicLayoutInflater(DynamicLayoutInflater original, Context newContext) {
         super(original, newContext);
     }
 
@@ -129,13 +127,13 @@ public class CompatDynamicLayoutInflater extends DynamicLayoutInflater {
         return super.onCreateView(name, attrs);
     }
 
-    public DynamicLayoutInflater cloneInContext(EditorContext newContext) {
+    public DynamicLayoutInflater cloneInContext(Context newContext) {
         return new CompatDynamicLayoutInflater(this, newContext);
     }
 
     public static class Builder extends DynamicLayoutInflater.Builder {
 
-        private Builder(EditorContext context) {
+        private Builder(Context context) {
             super(context);
         }
 
@@ -145,7 +143,7 @@ public class CompatDynamicLayoutInflater extends DynamicLayoutInflater {
         }
 
         @Override
-        protected DynamicLayoutInflater instance(EditorContext context) {
+        protected DynamicLayoutInflater instance(Context context) {
             return from(context);
         }
     }

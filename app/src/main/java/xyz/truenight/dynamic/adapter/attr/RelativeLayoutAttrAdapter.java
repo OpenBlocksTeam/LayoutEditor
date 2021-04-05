@@ -19,19 +19,16 @@ package xyz.truenight.dynamic.adapter.attr;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.tyron.layouteditor.editor.EditorContext;
-import com.tyron.layouteditor.editor.widget.viewgroup.RelativeLayoutItem;
-
 import xyz.truenight.dynamic.AttrUtils;
 
 final class RelativeLayoutAttrAdapter implements TypedAttrAdapter {
     @Override
     public boolean isSuitable(View view) {
-        return view instanceof RelativeLayoutItem;
+        return view instanceof RelativeLayout;
     }
 
     @Override
-    public boolean apply(EditorContext context, View v, String name, String value) {
+    public boolean apply(View v, String name, String value) {
         RelativeLayout view = (RelativeLayout) v;
         switch (name) {
             case "android:gravity":

@@ -20,7 +20,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.tyron.layouteditor.editor.EditorContext;
+import com.tyron.layouteditor.WidgetFactory;
+import com.tyron.layouteditor.models.Widget;
 
 public class PhoneDynamicLayoutInflater extends DynamicLayoutInflater {
     private static final String[] sClassPrefixList = {
@@ -30,18 +31,18 @@ public class PhoneDynamicLayoutInflater extends DynamicLayoutInflater {
 
     /**
      * Instead of instantiating directly, you should retrieve an instance
-     * through {@link DynamicLayoutInflater#from(EditorContext)}
+     * through {@link DynamicLayoutInflater#from(Context)}
      *
      * @param context The Context in which in which to find resources and other
      *                application-specific things.
      */
 
 
-    protected PhoneDynamicLayoutInflater(EditorContext context) {
+    protected PhoneDynamicLayoutInflater(Context context) {
         super(context);
     }
 
-    protected PhoneDynamicLayoutInflater(DynamicLayoutInflater original, EditorContext newContext) {
+    protected PhoneDynamicLayoutInflater(DynamicLayoutInflater original, Context newContext) {
         super(original, newContext);
     }
 
@@ -57,17 +58,17 @@ public class PhoneDynamicLayoutInflater extends DynamicLayoutInflater {
 
                 View view = null;
 
-//                switch(name){
-//                    case  "RelativeLayout":
-//                        view = widgetFactory.createWidget(new Widget("RelativeLayout")).getAsView();
-//                        break;
-//                    case "LinearLayout":
-//                        view = widgetFactory.createWidget(new Widget("LinearLayout")).getAsView();
-//                        break;
-//                    case "TextView":
-//                        view = widgetFactory.createWidget(new Widget("TextView")).getAsView();
-//                        break;
-//                }
+                switch(name){
+                    case  "RelativeLayout":
+                        view = widgetFactory.createWidget(getContext(), new Widget(Widget.RELATIVE_LAYOUT));
+                        break;
+                    case "LinearLayout":
+                        view = widgetFactory.createWidget(getContext(), new Widget(Widget.LINEAR_LAYOUT));
+                        break;
+                    case "TextView":
+                        view = widgetFactory.createWidget(getContext(), new Widget(Widget.TEXTVIEW));
+                        break;
+                }
                 if(view == null) {
                     view = createView(name, prefix, attrs);
                 }
@@ -83,7 +84,7 @@ public class PhoneDynamicLayoutInflater extends DynamicLayoutInflater {
         return super.onCreateView(name, attrs);
     }
 
-    public DynamicLayoutInflater cloneInContext(EditorContext newContext) {
+    public DynamicLayoutInflater cloneInContext(Context newContext) {
         return new PhoneDynamicLayoutInflater(this, newContext);
     }
 }
